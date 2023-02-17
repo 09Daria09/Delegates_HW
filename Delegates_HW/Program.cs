@@ -4,15 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*Создайте набор методов:
-■ Метод для отображения текущего времени;
-■ Метод для отображения текущей даты;
-■ Метод для отображения текущего дня недели;
-■ Метод для подсчёта площади треугольника;
-■ Метод для подсчёта площади прямоугольника.
-Для реализации проекта используйте делегаты Action,
-Predicate, Func.*/
-
 namespace Delegates_HW
 {
     class Program
@@ -77,6 +68,9 @@ namespace Delegates_HW
             }
         }
 
+        delegate void DateDeleg();
+        delegate double SquareDeleg(int a, int b, int c);
+
         struct DateAndSquare
         {
             public void TimeNow()
@@ -94,7 +88,15 @@ namespace Delegates_HW
                 DateTime time = new DateTime();
                 Console.WriteLine("Текущий день недели: " + time.ToString("dddd"));
             }
-
+            public double SquareTriangle(int a, int b, int c)
+            {
+                double p = (a + b + c) / 2.0;
+                return Math.Sqrt(p * (p - a) * (p - b) * (p - c));
+            }
+            public double SquareRectangle(int a, int b, int c = 0)
+            {
+                return a*b; 
+            }
 
         }
         static void Main(string[] args)
@@ -114,9 +116,19 @@ namespace Delegates_HW
             //2
 
             DateAndSquare date = new DateAndSquare();
+            DateDeleg dateDeleg = new DateDeleg(date.TimeNow);
 
-            date.TimeNow();
-            date.DateNow();
+            dateDeleg();
+            dateDeleg = date.WeekNow;
+            dateDeleg();
+            dateDeleg = date.DateNow;
+            dateDeleg();
+
+            DateAndSquare square = new DateAndSquare();
+            SquareDeleg[] squareDeleg = { square.SquareTriangle, square.SquareRectangle };
+
+            Console.WriteLine($"Пощадь треугольника -> {squareDeleg[0](5, 6, 7)}");
+            Console.WriteLine($"Пощадь прямоугольника -> {squareDeleg[1](7, 43, 8)}");
         }
     }
 }
